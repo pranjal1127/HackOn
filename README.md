@@ -6,3 +6,7 @@ At HackOn, we have different tracks. Your project need not be focused on solely 
 2.Supporting At-Risk or Quarantined People
 3.Improving Awareness and Behaviour
 4.Working Remotely
+
+We will work here to develop something that will be beneficial for our society and people facing the above mentioned problems.
+
+😊HAPPY-CODING

@@ -21,7 +21,7 @@ const AccountDetails = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
-
+  console.log();
   const [values, setValues] = useState({
     firstName: 'Shen',
     lastName: 'Zhi',

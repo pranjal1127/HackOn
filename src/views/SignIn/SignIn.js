@@ -3,6 +3,10 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+// import {GoogleLogin} from './GoogleLogin';
+import {GoogleLogin} from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+import axios from 'axios';
 import {
   Grid,
   Button,
@@ -13,8 +17,19 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
+// import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 
+// axios.defaults.withCredentials = true;
+
+let axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+    'X-Requested-With': 'XMLHttpRequest',
+  }
+};
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.withCredentials = true;
 const schema = {
   email: {
     presence: { allowEmpty: false, message: 'is required' },
@@ -169,14 +184,55 @@ const SignIn = props => {
       }
     }));
   };
+  const responseGoogle = (res)=>  {
+    console.log(res.accessToken);
+    const token = res.accessToken;
+    axios.post('http://localhost:5000/users/oauth/google', {'access_token':token},axiosConfig)
+      .then((res) => {
+        console.log('success');
+        history.push('/account');        
 
+      }).catch((err) => {
+        console.log('Email Exist');
+        console.log(err);
+        return 'Email is already in use';
+      })
+
+  }
+  const responseGoogleFail = (err)=>{console.log(err);}
+  const  responseFacebook = (response) => {
+    console.log(response.accessToken);
+    const token = response.accessToken;
+    axios.post('http://localhost:5000/users/oauth/facebook', {'access_token':token},axiosConfig)
+      .then((res) => {
+        console.log('success');
+        history.push('/account');        
+
+      }).catch((err) => {
+        console.log('Email Exist');
+        console.log(err);
+        return 'Email is already in use';
+      })
+    
+
+  }
   const handleSignIn = event => {
     event.preventDefault();
-    history.push('/');
+    const {email,password} = formState.values;
+    
+    axios.post('http://localhost:5000/users/signin', {
+      email,password},axiosConfig)
+      .then((response) => {   
+        console.log(response);  
+        history.push('/');        
+                 
+      })
+      .catch(function (error) {    
+        console.log(error);
+      });
   };
 
-  const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+  const hasError = field => formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div className={classes.root}>
@@ -244,33 +300,40 @@ const SignIn = props => {
                 >
                   Sign in with social media
                 </Typography>
+                
+                
                 <Grid
                   className={classes.socialButtons}
                   container
                   spacing={2}
                 >
                   <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
+                    
+                    <FacebookLogin
+                      appId="463772544335255" 
+                      callback={responseFacebook}
+                      fields="name,email,picture" 
+                      icon="fa-facebook"
+                    />
                   </Grid>
                   <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
+                    <GoogleLogin 
+                      buttonText="Login with Gogle"
+                      clientId="833758235863-aho83nor3uid0l0gv0pabqt4klkelfu8.apps.googleusercontent.com"
+                      cookiePolicy={'single_host_origin'}
+                      disabled={false}
+                      onFailure={responseGoogleFail}
+                      onSuccess={responseGoogle}
+                    />
+                   
+
                   </Grid>
                 </Grid>
+
+               
+                
+
+                
                 <Typography
                   align="center"
                   className={classes.sugestion}

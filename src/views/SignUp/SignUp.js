@@ -3,6 +3,9 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+import axios from 'axios';
+
+
 import {
   Grid,
   Button,
@@ -15,10 +18,19 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+let axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+  }
+};
+
+
+
 const schema = {
   firstName: {
     presence: { allowEmpty: false, message: 'is required' },
-    length: {
+    length: { 
       maximum: 32
     }
   },
@@ -41,8 +53,15 @@ const schema = {
       maximum: 128
     }
   },
+  password1: {
+    presence: { allowEmpty: false, message: 'is required' },
+    equality : 'password',
+    length: {
+      maximum: 128
+    }},
   policy: {
     presence: { allowEmpty: false, message: 'is required' },
+   
     checked: true
   }
 };
@@ -187,7 +206,24 @@ const SignUp = props => {
 
   const handleSignUp = event => {
     event.preventDefault();
-    history.push('/');
+    const data = {
+      first: formState.values.firstName,
+      last: formState.values.lastName,
+      email:  formState.values.email,
+      password:  formState.values.password,
+    }
+    axios.post('http://localhost:5000/users/signup', data,axiosConfig)
+      .then((response) => {     
+        console.log(response) ;
+        console.log(response.cookies) ;
+
+        history.push('/settings');
+                 
+      })
+      .catch(function (error) {
+        console.log('we have error : ');
+        console.log(error);
+      });
   };
 
   const hasError = field =>
@@ -234,7 +270,7 @@ const SignUp = props => {
           className={classes.content}
           item
           lg={7}
-          xs={12}
+          xs={12}  
         >
           <div className={classes.content}>
             <div className={classes.contentHeader}>
@@ -313,6 +349,20 @@ const SignUp = props => {
                   onChange={handleChange}
                   type="password"
                   value={formState.values.password || ''}
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  error={hasError('password1')}
+                  fullWidth
+                  helperText={
+                    hasError('password1') ? formState.errors.password1[0] : null
+                  }
+                  label="Confirm Password"
+                  name="password1"
+                  onChange={handleChange}
+                  type="password"
+                  value={formState.values.password1 || ''}
                   variant="outlined"
                 />
                 <div className={classes.policy}>

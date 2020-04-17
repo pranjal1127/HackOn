@@ -1,4 +1,5 @@
 export { default as Budget } from './Budget';
+export { default as ClassRooms } from './Classrooms';
 export { default as LatestOrders } from './LatestOrders';
 export { default as LatestProducts } from './LatestProducts';
 export { default as LatestSales } from './LatestSales';

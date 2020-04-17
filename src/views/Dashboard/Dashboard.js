@@ -4,13 +4,14 @@ import { Grid } from '@material-ui/core';
 
 import {
   Budget,
-  TotalUsers,
-  TasksProgress,
-  TotalProfit,
-  LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
+  ClassRooms
+  // TotalUsers,
+  // TasksProgress,
+  // TotalProfit,
+  // LatestSales,
+  // UsersByDevice,
+  // LatestProducts,
+  // LatestOrders
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +29,14 @@ const Dashboard = () => {
         container 
         spacing={4}
       >
-        <Grid
+        {/* <Grid item
+          lg={3}
+          sm={6}
+          xl={3}
+          xs={12}>
+          Hello World
+        </Grid> */}
+        {/* <Grid
           item
           lg={3}
           sm={6}
@@ -36,7 +44,35 @@ const Dashboard = () => {
           xs={12}
         >
           <Budget />
+        </Grid> */}
+        <Grid
+          item
+          lg={3}
+          sm={6}
+          xl={3}
+          xs={12}
+        >
+          <ClassRooms prof="R.K Jain" topic="Set Theory" sub="Maths" />
         </Grid>
+        <Grid
+          item
+          lg={3}
+          sm={6}
+          xl={3}
+          xs={12}
+        >
+          <ClassRooms prof="Amit Kumar" topic="Dijktra" sub="DAA" />
+        </Grid>
+        <Grid
+          item
+          lg={3}
+          sm={6}
+          xl={3}
+          xs={12}
+        >
+          <ClassRooms prof="Isha Pathak Tripathi" topic="Round Robin Algo" sub="Operating System" />
+        </Grid>
+        {/* 
         <Grid
           item
           lg={3}
@@ -99,7 +135,7 @@ const Dashboard = () => {
           xs={12}
         >
           <LatestOrders />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );
